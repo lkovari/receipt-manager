@@ -1,2 +1,1 @@
-# receipt-manager
-damo application
+Receipt Manager demo application
