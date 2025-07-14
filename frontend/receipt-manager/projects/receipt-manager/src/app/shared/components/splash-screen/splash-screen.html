@@ -1,0 +1,56 @@
+@if (showSplash) {
+  <div class="splash-container" [class.fade-out]="!showSplash">
+    <div class="splash-content">
+      <div class="welcome-text">
+        <h1>Welcome to our hackathon project</h1>
+      </div>
+
+      <div class="developer-section">
+        <span class="developed-by">Developed by </span>
+        <div class="developer-labels">
+          @for (dev of displayedDevelopers; track dev.name) {
+            <span class="developer-name-final" [style.color]="dev.color">
+              {{ dev.name }}
+            </span>
+          }
+        </div>
+        @if (currentIncomingDeveloper) {
+          <span class="developer-incoming" [style.color]="currentIncomingDeveloper.color">
+            {{ currentIncomingDeveloper.name }}
+          </span>
+        }
+      </div>
+
+      <div class="powered-by-section">
+        <span class="powered-by-text">Powered by </span>
+        <div class="logos">
+          <img 
+            src="https://asuratechnologies.com/_astro/logo-sign-white.BO2ZmaKn_1gDMCu.svg" 
+            alt="Asura Technologies Logo White" 
+            class="logo logo-white"
+          />
+          <img 
+            src="https://asuratechnologies.com//_astro/asura-logo-blue.Cf9fCK6j_1XQyWs.svg" 
+            alt="Asura Technologies Logo Blue" 
+            class="logo logo-blue"
+          />
+        </div>
+      </div>
+
+      <div class="loading-animation">
+        <div class="loading-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="decorative-elements">
+      <div class="floating-shape shape-1"><img src="https://asuratechnologies.com/_astro/logo-sign-white.BO2ZmaKn_1gDMCu.svg" alt="Asura Logo" class="floating-logo" /></div>
+      <div class="floating-shape shape-2"><img src="https://asuratechnologies.com/_astro/logo-sign-white.BO2ZmaKn_1gDMCu.svg" alt="Asura Logo" class="floating-logo" /></div>
+      <div class="floating-shape shape-3"><img src="https://asuratechnologies.com/_astro/logo-sign-white.BO2ZmaKn_1gDMCu.svg" alt="Asura Logo" class="floating-logo" /></div>
+      <div class="floating-shape shape-4"><img src="https://asuratechnologies.com/_astro/logo-sign-white.BO2ZmaKn_1gDMCu.svg" alt="Asura Logo" class="floating-logo" /></div>
+    </div>
+  </div>
+} 

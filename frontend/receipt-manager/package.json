@@ -1,0 +1,66 @@
+{
+  "name": "receipt-manager",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint",
+    "build-lib": "ng build common-lib --configuration production",
+    "build-app": "ng build --project receipt-manager --configuration production --aot --base-href /",
+    "gitbuild": "npm run build-lib && npm run build-app",
+    "gitdeploy": "gh-pages -d dist",
+    "format": "prettier --write \"**/*.{ts,html,css,scss}\"",
+    "generate-api-service": "npx openapi-generator-cli generate -i ../../openapi.json -g typescript-angular -o ./openapi-tmp && npm run move-openapi-to-core",
+    "move-openapi-to-core": "mkdir -p ./projects/receipt-manager/src/app/core/ && cp -r ./openapi-tmp/* ./projects/receipt-manager/src/app/core/ && rm -rf ./openapi-tmp"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "gh-pages": "^6.3.0",
+    "primeicons": "^7.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.0.4",
+    "@angular/cli": "^20.0.4",
+    "@angular/compiler-cli": "^20.0.0",
+    "@openapitools/openapi-generator-cli": "^2.21.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/jasmine": "~5.1.0",
+    "angular-eslint": "20.1.1",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "jasmine-core": "~5.7.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^20.0.0",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.2",
+    "typescript-eslint": "8.34.1"
+  }
+}

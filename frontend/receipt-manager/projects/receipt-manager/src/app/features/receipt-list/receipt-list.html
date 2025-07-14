@@ -1,0 +1,38 @@
+<div class="table-responsive w-full">
+  <table class="table-auto">
+    <thead>
+      <tr>
+        <th>Merchant</th>
+        <th>Total</th>
+        <th >Date</th>
+        <th class="w-20">Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (receipt of receiptList; track receipt.id) {
+        <tr (click)="onRowClick(receipt)" [class.selected]="isSelected(receipt)">
+          <td class="whitespace-normal overflow-visible sm:truncate" data-label="Merchant" [appShowTooltip]="receipt.merchant">
+            {{ receipt.merchant }}
+          </td>
+          <td data-label="Total">{{ receipt.total | number: '1.2-2' }} {{ receipt.currency }}</td>
+          <td data-label="Date">{{ receipt.date | date: 'mediumDate' }}</td>
+          <td class="w-20" data-label="Image">
+            @if (receipt.image_url) {
+              <!--img [src]="receipt.image_url" alt="Receipt Image" class="receipt-img" /-->
+              <div class="image-hover-container">
+                <img [src]="receipt.image_url" alt="Receipt Image" class="receipt-img" />
+                <div class="image-preview-panel">
+                  <img [src]="receipt.image_url" alt="Receipt Preview" />
+                </div>
+              </div>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4">No receipts found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

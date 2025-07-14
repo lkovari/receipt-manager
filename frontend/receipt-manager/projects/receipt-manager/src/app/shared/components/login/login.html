@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      [value]="email()"
+      (input)="onEmailInput($event)"
+      formControlName="email"
+      required
+      autocomplete="username"
+    />
+    @if (emailControl?.invalid && (emailControl?.dirty || emailControl?.touched)) {
+      <div class="error">
+        @if (emailControl?.errors?.['required']) {
+          <span>Email is required.</span>
+        }
+        @if (emailControl?.errors?.['email']) {
+          <span>Invalid email address.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      [value]="password()"
+      (input)="onPasswordInput($event)"
+      formControlName="password"
+      required
+      autocomplete="current-password"
+    />
+    @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
+      <div class="error">
+        @if (passwordControl?.errors?.['required']) {
+          <span>Password is required.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">OK</button>
+</form>

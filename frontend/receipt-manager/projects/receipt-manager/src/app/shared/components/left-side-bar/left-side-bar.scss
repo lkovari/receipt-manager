@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  height: 100%;
+  background: linear-gradient(135deg, #fbfbfc 0%, #d1d9e6 100%);
+}
+
+.row-align {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+ul, li, a {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.icon-align {
+  width: 24px;
+  text-align: left;
+}
+
+.menu-label-align {
+  padding-left: 8px;
+  text-align: left;
+}
+a:hover {
+  background-color: #dbeafe;
+}

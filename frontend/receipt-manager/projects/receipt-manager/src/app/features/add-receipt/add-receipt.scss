@@ -1,0 +1,90 @@
+.add-receipt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  width: 100%;
+}
+
+.add-receipt-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  background: #fff;
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.250);
+  min-width: 340px;
+  max-width: 95vw;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.add-receipt-container h2 {
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #5e35b1;
+}
+
+.solid-btn {
+  background: #b3aaff;
+  color: #3d246b;
+  border-radius: 8px;
+  padding: 1rem 2.8rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.250);
+  letter-spacing: 0.03em;
+}
+.solid-btn:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.solid-btn:not(:disabled):hover {
+  background: #d1c4e9;
+  color: #4527a0;
+}
+
+.add-receipt-container label {
+  font-weight: 500;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.add-receipt-container input[type="file"] {
+  margin-top: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.add-receipt-container span,
+.add-receipt-container div[style*="color:"] {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 600px) {
+  .add-receipt-container form {
+    padding: 1.2rem 0.5rem;
+    min-width: unset;
+    width: 98vw;
+    border-radius: 10px;
+    gap: 1.2rem;
+  }
+  .add-receipt-container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .solid-btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+  .add-receipt-container label,
+  .add-receipt-container input[type="file"] {
+    font-size: 1rem;
+  }
+}

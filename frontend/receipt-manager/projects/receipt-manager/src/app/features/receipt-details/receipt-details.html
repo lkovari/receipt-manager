@@ -1,0 +1,60 @@
+<div class="receipt-details-container w-full">
+  @if (receipt) {
+    <h2 class="font-bold text-xl mb-4">Receipt Details</h2>
+    <div class="details-flex pb-6">
+      <div class="details-main">
+        <div class="details-grid">
+          <div>Merchant: {{ receipt.merchant }}</div>
+          <div>Total: {{ receipt.total | number: '1.2-2' }} {{ currency }}</div>
+          <div>Date: {{ receipt.date | date: 'medium' }}</div>
+          <div>Created At: {{ receipt.created_at | date: 'medium' }}</div>
+        </div>
+        <div class="items-table-container">
+          @if (receiptItems.length > 0) {
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Item Code</th>
+                  <th>Category</th>
+                  <th>Unit Price</th>
+                  <th>Quantity</th>
+                  <th>Line Total</th>
+                  <th>Currency</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of receiptItems; track item.description) {
+                  <tr>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.itemCode || '-' }}</td>
+                    <td>{{ item.category || '-' }}</td>
+                    <td>{{ item.unitPrice != null ? (item.unitPrice | number: '1.2-2') : '-' }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.lineTotal | number: '1.2-2' }}</td>
+                    <td>{{ item.currency }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <div class="no-data">No items found.</div>
+          }
+        </div>
+      </div>
+      @if (receipt.image_url) {
+        <div class="image-hover-container image-side" (mouseenter)="showPreview = true" (mouseleave)="showPreview = false">
+          <img [src]="receipt.image_url" alt="Receipt Image" class="receipt-image" />
+          @if (showPreview) {
+            <div class="image-preview-panel">
+              <img [src]="receipt.image_url" alt="Receipt Preview" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+    <button class="back-btn" (click)="goBack()">&larr; Back to Receipts</button>
+  } @else {
+    <div class="no-data">No receipt data found.</div>
+  }
+</div>

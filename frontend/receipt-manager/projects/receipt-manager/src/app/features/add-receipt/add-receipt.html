@@ -1,0 +1,19 @@
+<div class="add-receipt-container">
+  <h2>Add Receipt</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div>
+      <label for="file">Select Image:</label>
+      <input id="file" type="file" accept="image/*" (change)="onFileChange($event)" required />
+    </div>
+    @if (form.get('file')?.invalid && (form.get('file')?.touched || form.get('file')?.dirty)) {
+      <span style="color: red;">Image is required.</span>
+    }
+    @if (uploadError) {
+      <div style="color: red;">{{ uploadError }}</div>
+    }
+    @if (uploadSuccess) {
+      <div style="color: green;">Upload successful!</div>
+    }
+    <button type="submit" class="solid-btn" [disabled]="uploading || form.invalid">{{ uploading ? 'Uploading...' : 'Upload' }}</button>
+  </form>
+</div>

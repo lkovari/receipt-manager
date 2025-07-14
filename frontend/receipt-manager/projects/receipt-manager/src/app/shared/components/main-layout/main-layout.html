@@ -1,0 +1,22 @@
+<div class="layout-container">
+  <header class="bg-surface-brand-strong text-neutral-inverted">
+    <app-header (onSidebarVisibleChange)="toggleSidebar()"></app-header>
+  </header>
+  @if (!isMobileView()) {
+    <aside>
+      <app-left-side-bar [menuItems]="menuItems"></app-left-side-bar>
+    </aside>
+  } @else {
+    <div id="navi" class="overlay" [style.width]="sidebarVisible ? '100%' : '0%'">
+      <div class="overlay-content">
+        <app-left-side-bar [menuItems]="menuItems" (menuItemSelected)="closeNav()"></app-left-side-bar>
+      </div>
+    </div>
+  }
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  <footer class=" border-t border-gray-300 dark:border-gray-600">
+    <app-footer></app-footer>
+  </footer>
+</div>
