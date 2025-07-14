@@ -1,0 +1,9 @@
+version: '3'
+
+tasks:
+  generate-client:
+    desc: Generate Dart client from OpenAPI spec and build
+    dir: ./receipt_manager_client
+    cmds:
+      - npx --yes @openapitools/openapi-generator-cli generate -i ../swagger.json -g dart-dio -o .
+      - dart run build_runner build

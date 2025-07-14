@@ -1,0 +1,1 @@
+const apiBaseUrl = 'https://receipt-manager-t356.onrender.com';

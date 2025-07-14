@@ -1,0 +1,2 @@
+npx @openapitools/openapi-generator-cli generate -i ../swagger.json -g dart-dio -o .
+dart run build_runner build
