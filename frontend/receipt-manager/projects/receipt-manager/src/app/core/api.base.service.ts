@@ -12,12 +12,12 @@ import { CustomHttpParameterCodec } from './encoder';
 import { Configuration } from './configuration';
 
 export class BaseService {
-    protected basePath = 'https://receipt-manager-t356.onrender.com';
+    protected basePath = 'https://receipt-manager-ji1r.onrender.com';
     public defaultHeaders = new HttpHeaders();
     public configuration: Configuration;
     public encoder: HttpParameterCodec;
 
-    constructor(basePath?: string|string[], configuration?: Configuration) {
+    constructor(basePath?: string | string[], configuration?: Configuration) {
         this.configuration = configuration || new Configuration();
         if (typeof this.configuration.basePath !== 'string') {
             const firstBasePath = Array.isArray(basePath) ? basePath[0] : undefined;

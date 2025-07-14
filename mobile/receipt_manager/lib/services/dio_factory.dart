@@ -25,8 +25,8 @@ Future<Dio> createDioWithAuth({String baseUrl = apiBaseUrl}) async {
 
   var request = LoginRequest(
     (b) => b
-      ..email = 'admin@receipt-manager.com'
-      ..password = 'Admin1234!',
+      ..email = 'suzukigs500f0407@@gmail.com'
+      ..password = 'AdminAdm1n65',
   );
 
 Response<LoginResponse>? authResponse;

@@ -1,1 +1,1 @@
-const apiBaseUrl = 'https://receipt-manager-t356.onrender.com';
+const apiBaseUrl = 'https://receipt-manager-ji1r.onrender.com';
