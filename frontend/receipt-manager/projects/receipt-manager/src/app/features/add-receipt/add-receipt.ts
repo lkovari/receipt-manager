@@ -57,8 +57,8 @@ export class AddReceiptComponent {
     // A generált service nem támogatja a headers property-t, ezért HttpClient-et használunk közvetlenül
     const formData = new FormData();
     formData.append('file', blob);
+    formData.append('refresh_token', refreshToken);
     this.receiptsService['httpClient'].post('/receipts/process', formData, {
-      headers,
       observe: 'body',
       responseType: 'json'
     }).subscribe({
