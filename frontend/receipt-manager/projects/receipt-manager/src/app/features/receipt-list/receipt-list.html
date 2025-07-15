@@ -11,7 +11,7 @@
     <tbody>
       @for (receipt of receiptList; track receipt.id) {
         <tr (click)="onRowClick(receipt)" [class.selected]="isSelected(receipt)">
-          <td class="whitespace-normal overflow-visible sm:truncate" data-label="Merchant" [appShowTooltip]="receipt.merchant">
+          <td class="whitespace-normal overflow-visible sm:truncate" data-label="Merchant" [appShowTooltip]="receipt.merchant ?? ''">
             {{ receipt.merchant }}
           </td>
           <td data-label="Total">{{ receipt.total | number: '1.2-2' }} {{ receipt.currency }}</td>

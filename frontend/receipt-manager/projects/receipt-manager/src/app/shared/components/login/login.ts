@@ -4,12 +4,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/api/auth.service';
 import { LoginRequest } from '../../../core/model/loginRequest';
 import { Router } from '@angular/router';
-import { AppAuthService } from '../../../core/services/app-auth.service';
+import { LoginResponse } from '../../../core/model/loginResponse';
 
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
-  providers: [AuthService, FormBuilder],
+  providers: [FormBuilder],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +18,6 @@ export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private appAuth = inject(AppAuthService);
 
   email = signal('');
   password = signal('');
@@ -57,15 +56,16 @@ export class Login {
     };
     this.authService.loginAuthLoginPost(loginRequest).subscribe({
       next: (response) => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
-        this.appAuth.setAccessToken(response.access_token);
-        this.appAuth.setRefreshToken(response.refresh_token);
-        console.log('Login success', response);
+        const loginResponse = response as LoginResponse;
+        localStorage.setItem('access_token', loginResponse.access_token);
+        localStorage.setItem('refresh_token', loginResponse.refresh_token);
+        console.log('Type ', typeof loginResponse.access_token, loginResponse.access_token);
+        console.log('Login success', loginResponse);
         this.router.navigateByUrl('/home');
       },
       error: (err) => {
-        this.appAuth.clearToken();
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         this.router.navigateByUrl('/login');
         console.error('Login error', err);
       },

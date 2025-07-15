@@ -43,7 +43,7 @@ def create_processing_task(user_id: UUID, image_url: str) -> ReceiptProcessingTa
         "status": ProcessingStatus.PENDING.value,
         "image_url": image_url
     }
-
+    print("INSERTING TASK (receipts/service.py):", data, flush=True)
     response = supabase.table("receipt_processing_tasks").insert(data).execute()
 
     if not response.data:

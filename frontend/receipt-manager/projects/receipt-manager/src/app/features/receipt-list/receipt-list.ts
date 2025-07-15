@@ -12,13 +12,13 @@ import { ShowTooltipDirective } from '../../shared';
   styleUrl: './receipt-list.scss'
 })
 export class ReceiptListComponent {
- private route = inject(ActivatedRoute);
- private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   receipts: PaginatedResponseReceiptListResponse | null = this.route.snapshot.data['receipts'] ?? null;
   receiptList: ReceiptListResponse[] = this.receipts ? this.receipts.items : [];
   selectedReceipt: ReceiptListResponse | null = null;
-  
+
   trackByIdFn(index: number, item: ReceiptListResponse): string {
     return item.id;
   }
@@ -31,5 +31,5 @@ export class ReceiptListComponent {
 
   isSelected(receipt: ReceiptListResponse): boolean {
     return this.selectedReceipt?.id === receipt.id;
-  }  
+  }
 }

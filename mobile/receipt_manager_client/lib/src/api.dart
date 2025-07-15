@@ -14,7 +14,7 @@ import 'package:openapi/src/api/receipts_api.dart';
 import 'package:openapi/src/api/tasks_api.dart';
 
 class Openapi {
-  static const String basePath = r'http://localhost';
+  static const String basePath = r'https://receipt-manager-ji1r.onrender.com';
 
   final Dio dio;
   final Serializers serializers;

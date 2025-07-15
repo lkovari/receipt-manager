@@ -14,9 +14,9 @@ export interface ReceiptResponse {
     id: string;
     user_id: string;
     receipt_data: ReceiptData;
-    merchant: string;
+    merchant?: string | null;
     total: number;
-    date: string;
+    date: string | null;
     image_url?: string | null;
     created_at: string;
 }

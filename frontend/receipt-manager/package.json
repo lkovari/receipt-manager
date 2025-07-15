@@ -14,7 +14,7 @@
     "gitdeploy": "gh-pages -d dist",
     "format": "prettier --write \"**/*.{ts,html,css,scss}\"",
     "generate-api-service": "npx openapi-generator-cli generate -i ../../openapi.json -g typescript-angular -o ./openapi-tmp && npm run move-openapi-to-core",
-    "move-openapi-to-core": "mkdir -p ./projects/receipt-manager/src/app/core/ && cp -r ./openapi-tmp/* ./projects/receipt-manager/src/app/core/ && rm -rf ./openapi-tmp"
+    "move-openapi-to-core": "mkdir -p ./projects/receipt-manager/src/app/core && cp -r ./openapi-tmp/* ./projects/receipt-manager/src/app/core/ && rm -rf ./openapi-tmp"
   },
   "prettier": {
     "overrides": [
