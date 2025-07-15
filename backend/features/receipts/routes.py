@@ -14,9 +14,9 @@ from .service import (
     search_receipts_by_category,
     get_receipt_statistics,
     process_receipt_task,
-    upload_image_to_cloudinary
+    upload_image_to_cloudinary,
+    create_processing_task
 )
-from ..tasks.service import create_processing_task
 from ..common.schemas import PaginatedResponse
 from typing import List, Optional
 from uuid import UUID
@@ -68,7 +68,7 @@ async def process_receipt_image(
         # Upload image to Cloudinary
         image_url = await upload_image_to_cloudinary(file)
 
-        # Create processing task (átadjuk a JWT access_token-t is)
+        # Create processing task (pass JWT access_token too)
         task = create_processing_task(user_id, image_url, credentials.credentials)
 
         # Add background task for processing (now using sync wrapper)
