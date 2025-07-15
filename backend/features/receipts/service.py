@@ -23,6 +23,9 @@ from ..tasks.service import (
     store_llm_response,
     ProcessingStatus
 )
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("receipt_logger")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
@@ -43,7 +46,7 @@ def create_processing_task(user_id: UUID, image_url: str) -> ReceiptProcessingTa
         "status": ProcessingStatus.PENDING.value,
         "image_url": image_url
     }
-    print("INSERTING TASK (receipts/service.py):", data, flush=True)
+    logger.info(f"INSERTING TASK (receipts/service.py): {data}")
     response = supabase.table("receipt_processing_tasks").insert(data).execute()
 
     if not response.data:
