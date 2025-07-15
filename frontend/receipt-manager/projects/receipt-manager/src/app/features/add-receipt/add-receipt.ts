@@ -52,16 +52,7 @@ export class AddReceiptComponent {
     this.uploadError = null;
     this.uploadSuccess = false;
     const blob = this.selectedFile as Blob;
-    const refreshToken = localStorage.getItem('refresh_token') || '';
-    const headers = new HttpHeaders({ 'X-Refresh-Token': refreshToken });
-    // A generált service nem támogatja a headers property-t, ezért HttpClient-et használunk közvetlenül
-    const formData = new FormData();
-    formData.append('file', blob);
-    formData.append('refresh_token', refreshToken);
-    this.receiptsService['httpClient'].post('/receipts/process', formData, {
-      observe: 'body',
-      responseType: 'json'
-    }).subscribe({
+    this.receiptsService.processReceiptImageReceiptsProcessPost(blob).subscribe({
       next: () => {
         this.uploadSuccess = true;
         this.uploading = false;
