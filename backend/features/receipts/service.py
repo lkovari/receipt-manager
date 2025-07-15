@@ -39,10 +39,10 @@ CLOUDINARY_UPLOAD_URL = f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Receipt processing task functions
-def create_processing_task(user_id: UUID, image_url: str, access_token: str) -> ReceiptProcessingTask:
+def create_processing_task(user_id: UUID, image_url: str, access_token: str, refresh_token: str) -> ReceiptProcessingTask:
     """Create a new receipt processing task as the authenticated user"""
     user_supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    user_supabase.auth.session().access_token = access_token
+    user_supabase.auth.set_session(access_token, refresh_token)
     data = {
         "user_id": str(user_id),
         "status": ProcessingStatus.PENDING.value,

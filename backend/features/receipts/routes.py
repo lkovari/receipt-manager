@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query, BackgroundTasks, UploadFile, File, Request, Security
+from fastapi import APIRouter, HTTPException, Depends, Query, BackgroundTasks, UploadFile, File, Request, Security, Header
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from .schemas import (
     ReceiptCreate, ReceiptUpdate, ReceiptResponse,
@@ -61,15 +61,16 @@ async def process_receipt_image(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     user_id: UUID = Depends(get_current_user_id),
-    credentials: HTTPAuthorizationCredentials = Security(security)
+    credentials: HTTPAuthorizationCredentials = Security(security),
+    x_refresh_token: str = Header(...)
 ):
     """Upload a receipt image, store it in Cloudinary, and start processing with Gemini LLM"""
     try:
         # Upload image to Cloudinary
         image_url = await upload_image_to_cloudinary(file)
 
-        # Create processing task (pass JWT access_token too)
-        task = create_processing_task(user_id, image_url, credentials.credentials)
+        # Create processing task (átadjuk a JWT access_token-t és refresh_token-t is)
+        task = create_processing_task(user_id, image_url, credentials.credentials, x_refresh_token)
 
         # Add background task for processing (now using sync wrapper)
         background_tasks.add_task(
