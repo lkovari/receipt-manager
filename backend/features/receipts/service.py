@@ -23,12 +23,9 @@ from ..tasks.service import (
     store_llm_response,
     ProcessingStatus
 )
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("receipt_logger")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
@@ -39,17 +36,15 @@ CLOUDINARY_UPLOAD_URL = f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Receipt processing task functions
-def create_processing_task(user_id: UUID, image_url: str, access_token: str, refresh_token: str) -> ReceiptProcessingTask:
-    """Create a new receipt processing task as the authenticated user"""
-    user_supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-    user_supabase.auth.set_session(access_token, refresh_token)
+def create_processing_task(user_id: UUID, image_url: str) -> ReceiptProcessingTask:
+    """Create a new receipt processing task"""
     data = {
         "user_id": str(user_id),
         "status": ProcessingStatus.PENDING.value,
         "image_url": image_url
     }
-    logger.info(f"INSERTING TASK (receipts/service.py): {data}")
-    response = user_supabase.table("receipt_processing_tasks").insert(data).execute()
+
+    response = supabase.table("receipt_processing_tasks").insert(data).execute()
 
     if not response.data:
         raise Exception("Failed to create processing task")
