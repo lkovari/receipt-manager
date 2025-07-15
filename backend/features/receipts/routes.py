@@ -23,14 +23,11 @@ from uuid import UUID
 import jwt
 import os
 import asyncio
-import logging
 
 router = APIRouter(
     tags=["Receipts"],
     prefix="/receipts"
 )
-
-logger = logging.getLogger("receipt_upload")
 
 SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 SUPABASE_JWT_AUD = os.getenv("SUPABASE_JWT_AUD", "authenticated")
@@ -63,56 +60,30 @@ def run_process_receipt_task_in_background(task_id, user_id, image_url):
 async def process_receipt_image(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    access_token: str = File(...),
-    refresh_token: str = File(...)
+    user_id: UUID = Depends(get_current_user_id)
 ):
-    from supabase import create_client
-    import jwt
-    import os
-    logger.info(f"[RECEIPT UPLOAD] File received: {file.filename}")
-    logger.info(f"[RECEIPT UPLOAD] Access token received: {bool(access_token)}, Refresh token received: {bool(refresh_token)}")
-    supabase_url = os.getenv("SUPABASE_URL")
-    supabase_key = os.getenv("SUPABASE_ANON_KEY")
-    supabase = create_client(supabase_url, supabase_key)
+    """Upload a receipt image, store it in Cloudinary, and start processing with Gemini LLM"""
     try:
-        supabase.auth.set_session(access_token, refresh_token)
-        logger.info("[RECEIPT UPLOAD] Supabase session set.")
-        SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
-        SUPABASE_JWT_AUD = os.getenv("SUPABASE_JWT_AUD", "authenticated")
-        payload = jwt.decode(
-            access_token,
-            SUPABASE_JWT_SECRET,
-            algorithms=["HS256"],
-            audience=SUPABASE_JWT_AUD
-        )
-        user_id = payload.get("sub")
-        logger.info(f"[RECEIPT UPLOAD] user_id decoded from JWT: {user_id}")
-        if not user_id:
-            logger.error("[RECEIPT UPLOAD] ERROR: Invalid token, no user id.")
-            raise HTTPException(status_code=401, detail="Invalid token: no user id")
         # Upload image to Cloudinary
         image_url = await upload_image_to_cloudinary(file)
-        logger.info(f"[RECEIPT UPLOAD] Image uploaded to Cloudinary: {image_url}")
+
         # Create processing task
         task = create_processing_task(user_id, image_url)
-        logger.info(f"[RECEIPT UPLOAD] Processing task created: {task.id}")
+
         # Add background task for processing (now using sync wrapper)
         background_tasks.add_task(
             run_process_receipt_task_in_background,
             task.id,
             user_id,
-            image_url,
-            access_token,
-            refresh_token
+            image_url
         )
-        logger.info(f"[RECEIPT UPLOAD] Background task started for task_id: {task.id}")
+
         return ReceiptProcessingResponse(
             task_id=task.id,
             status=task.status,
             message="Receipt processing started. Check status with /tasks/{task_id}"
         )
     except Exception as e:
-        logger.error(f"[RECEIPT UPLOAD] ERROR: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{receipt_id}", response_model=ReceiptResponse)
