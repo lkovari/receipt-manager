@@ -23,6 +23,9 @@ from ..tasks.service import (
     store_llm_response,
     ProcessingStatus
 )
+import logging
+
+logger = logging.getLogger("receipt_processing_task")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
@@ -266,21 +269,31 @@ async def process_receipt_with_gemini(task_id: UUID, image_url: str) -> ReceiptD
         })
         raise
 
-async def process_receipt_task(task_id: UUID, user_id: UUID, image_url: str):
+async def process_receipt_task(task_id: UUID, user_id: UUID, image_url: str, access_token: str = None, refresh_token: str = None):
     """Background task to process receipt with Gemini"""
+    logger.info(f"[TASK] Started processing task_id={task_id} for user_id={user_id}")
     try:
+        if access_token and refresh_token:
+            from supabase import create_client
+            import os
+            supabase_url = os.getenv("SUPABASE_URL")
+            supabase_key = os.getenv("SUPABASE_ANON_KEY")
+            supabase = create_client(supabase_url, supabase_key)
+            supabase.auth.set_session(access_token, refresh_token)
+            logger.info(f"[TASK] Supabase session set for user_id={user_id}")
         # Update status to processing
         update_processing_task_status(task_id, ProcessingStatus.PROCESSING)
-
+        logger.info(f"[TASK] Status set to PROCESSING for task_id={task_id}")
         # Process with Gemini
         receipt_data = await process_receipt_with_gemini(task_id, image_url)
-
+        logger.info(f"[TASK] Gemini LLM processing complete for task_id={task_id}")
         # Create receipt in database
         receipt_create = ReceiptCreate(receipt_data=receipt_data, image_url=image_url)
         receipt = create_receipt(user_id, receipt_create)
-
+        logger.info(f"[TASK] Receipt created in DB for user_id={user_id}, receipt_id={receipt.id}")
         # Update task status to completed
         update_processing_task_status(task_id, ProcessingStatus.COMPLETED, receipt_id=receipt.id)
+        logger.info(f"[TASK] Status set to COMPLETED for task_id={task_id}")
     except Exception as e:
         import traceback, json
         tb = traceback.format_exc()
@@ -290,6 +303,7 @@ async def process_receipt_task(task_id: UUID, user_id: UUID, image_url: str):
             error_message=str(e),
             exception_details=json.dumps({"error": str(e), "traceback": tb})
         )
+        logger.error(f"[TASK] FAILED for task_id={task_id}: {e}\n{tb}")
 
 # Original receipt functions
 def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptResponse:
