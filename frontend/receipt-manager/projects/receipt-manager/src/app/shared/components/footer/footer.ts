@@ -8,15 +8,15 @@ import { AngularVersion } from '../../../../../../common-lib/src/lib/angular-ver
   styleUrl: './footer.scss'
 })
 export class Footer implements OnInit, OnDestroy {
-  developers = [ 'László Kővári', 'Viktor Hőbör', 'Norbert Rafai', 'Szilveszter Pintér' ];
+  developers = [' Front-End by László Kővári ', ' Back-End by Norbert Rafai '];
 
-  developerOrders = [ [1, 2, 3, 4], [2, 3, 4, 1], [3, 4, 1, 2], [4, 1, 2, 3]  ];
+  developerOrders = [[1, 2], [2, 1]];
 
   private previousIndex: number | null = null;
   currentDeveloperOrder = '';
   private intervalId: any;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.currentDeveloperOrder = this.getDeveloperOrder();
@@ -35,7 +35,7 @@ export class Footer implements OnInit, OnDestroy {
   getDeveloperOrder(): string {
     let idx: number;
     do {
-      idx = Math.floor(Math.random() * 4);
+      idx = Math.floor(Math.random() * 2);
     } while (idx === this.previousIndex);
     this.previousIndex = idx;
     const order = this.developerOrders[idx];

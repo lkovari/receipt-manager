@@ -8,10 +8,8 @@ interface DeveloperLabel {
 }
 
 const DEVELOPER_NAMES = [
-  'László Kővári',
-  'Viktor Hőbör',
-  'Norbert Rafai',
-  'Szilveszter Pintér'
+  'Front-End: László Kővári',
+  'Back-End: Norbert Rafai'
 ];
 
 @Component({
@@ -43,9 +41,10 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
 
   private developerColorPairs: DeveloperLabel[] = [];
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.shuffleArray(this.developers); // Véletlenszerű sorrend
     this.prepareDeveloperColorPairs();
     this.displayedDevelopers = [];
     this.showAllDevelopers = false;
@@ -62,10 +61,10 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
   private prepareDeveloperColorPairs() {
     const devs = [...this.developers];
     const colors = [...this.colors];
-    while (colors.length > devs.length) colors.splice(Math.floor(Math.random() * colors.length), 1);
-    this.shuffleArray(devs);
     this.shuffleArray(colors);
-    this.developerColorPairs = devs.map((name, i) => ({ name, color: colors[i] }));
+    // Csak annyi színt használjunk, ahány fejlesztő van, és ne legyen ismétlődés
+    const selectedColors = colors.slice(0, devs.length);
+    this.developerColorPairs = devs.map((name, i) => ({ name, color: selectedColors[i] }));
     this.remainingDevelopers = this.developerColorPairs.map(pair => pair.name);
   }
 
