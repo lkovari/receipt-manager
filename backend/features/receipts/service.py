@@ -19,6 +19,7 @@ from decimal import Decimal
 import base64
 import re
 import requests
+import jwt
 
 from ..tasks.service import (
     update_processing_task_status,
@@ -72,3 +73,32 @@ def create_processing_task_with_token(user_id: UUID, image_url: str, access_toke
         raise Exception(f"Failed to insert processing task: {response.status_code} - {response.text}")
 
     return ReceiptProcessingTask(**response.json()[0])
+
+def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptResponse:
+    """Create a new receipt for a user"""
+    merchant_name = receipt_data.receipt_data.merchant_info.name if receipt_data.receipt_data.merchant_info else None
+    total_amount = receipt_data.receipt_data.financial_summary.final_total if receipt_data.receipt_data.financial_summary else None
+    currency = receipt_data.receipt_data.financial_summary.currency if receipt_data.receipt_data.financial_summary and hasattr(receipt_data.receipt_data.financial_summary, 'currency') else None
+    date_str = receipt_data.receipt_data.date_time if receipt_data.receipt_data.date_time else None
+    date_val = None
+    if date_str:
+        try:
+            date_val = date.fromisoformat(date_str[:10])
+        except Exception:
+            date_val = None
+    date_for_db = date_val.isoformat() if date_val else None
+
+    data = {
+        "user_id": str(user_id),
+        "receipt_data": receipt_data.receipt_data.model_dump(by_alias=True),
+        "merchant": merchant_name,
+        "total": total_amount,
+        "currency": currency,
+        "date": date_for_db,
+        "image_url": str(receipt_data.image_url) if receipt_data.image_url else None
+    }
+
+    response = supabase.table("receipts").insert(data).execute()
+    if not response.data:
+        raise Exception("Failed to create receipt")
+    return ReceiptResponse(**response.data[0])
