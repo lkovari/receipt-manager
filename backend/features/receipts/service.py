@@ -102,3 +102,10 @@ def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptRespons
     if not response.data:
         raise Exception("Failed to create receipt")
     return ReceiptResponse(**response.data[0])
+
+def get_receipt(receipt_id: UUID, user_id: UUID) -> Optional[ReceiptResponse]:
+    """Get a specific receipt by ID for a user"""
+    response = supabase.table("receipts").select("*").eq("id", str(receipt_id)).eq("user_id", str(user_id)).execute()
+    if not response.data:
+        return None
+    return ReceiptResponse(**response.data[0])
