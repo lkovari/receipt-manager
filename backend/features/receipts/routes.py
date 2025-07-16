@@ -5,17 +5,9 @@ from .schemas import (
     ReceiptProcessingResponse, ReceiptListResponse
 )
 from .service import (
-    create_receipt,
-    get_receipt,
-    get_user_receipts,
-    update_receipt,
-    delete_receipt,
-    search_receipts,
-    search_receipts_by_category,
-    get_receipt_statistics,
+    create_processing_task_with_token,
     process_receipt_task,
-    upload_image_to_cloudinary,
-    create_processing_task_with_token
+    upload_image_to_cloudinary
 )
 from ..tasks.service import update_processing_task_status
 from ..common.schemas import PaginatedResponse
