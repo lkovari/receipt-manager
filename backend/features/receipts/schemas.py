@@ -13,6 +13,18 @@ class ProcessingStatus(str, Enum):
     FAILED = "failed"
 
 # Nested models for the Gemini LLM output schema
+
+class BuyerInfo(BaseModel):
+    name: Optional[str]
+    taxId: Optional[str]
+    address: Optional[str]
+    zipCode: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    country: Optional[str]
+    phone: Optional[str]
+    email: Optional[str]
+
 class MerchantInfo(BaseModel):
     name: Optional[str] = None
     tax_id: Optional[str] = Field(None, alias="taxId")

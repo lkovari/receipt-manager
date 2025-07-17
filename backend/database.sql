@@ -63,3 +63,21 @@ CREATE POLICY "Users can view their own llm responses"
             SELECT id FROM receipt_processing_tasks WHERE user_id = auth.uid()
         )
     );
+
+-- Buyers table
+CREATE TABLE buyers (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text,
+    tax_id text,
+    address text,
+    zip_code text,
+    city text,
+    state text,
+    country text,
+    phone text,
+    email text,
+    created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE receipts ADD COLUMN buyer_id uuid REFERENCES buyers(id);
+

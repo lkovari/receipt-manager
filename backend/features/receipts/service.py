@@ -164,6 +164,17 @@ async def process_receipt_with_gemini(task_id: UUID, image_url: str) -> ReceiptD
         "zipCode": "string | null",
         "country": "string | null" // Infer from context if not explicit
     },
+    "buyerInfo": {
+        "name": "string | null",
+        "taxId": "string | null",
+        "address": "string | null",
+        "zipCode": "string | null",
+        "city": "string | null",
+        "state": "string | null",
+        "country": "string | null",
+        "phone": "string | null",
+        "email": "string | null"
+    },
     "dateTime": "string | null", // ISO 8601 format (YYYY-MM-DDTHH:MM:SS) for purchase date and time
     "items": [ // Array of purchased items
         {
@@ -229,8 +240,10 @@ async def process_receipt_with_gemini(task_id: UUID, image_url: str) -> ReceiptD
     3. If the same "description" appears multiple times, merge into one entry, summing "quantity" and "total_price" (keep "unit_price" unchanged).
     4. Category should be inferred from the description.
     5. Unit price should be inferred if not provided.
-    6. Output only the raw JSON object without any surrounding code fences, markdown, or additional text.
+    6. Also, if the receipt contains buyer information (typically when issued to a company or private customer), extract it into the buyerInfo field. This includes the buyer’s name, tax ID (if a company), and address components (zip code, city, state, country, street). If any of these fields cannot be confidently extracted (confidence below 80%), leave them as null.
+    7. Output only the raw JSON object without any surrounding code fences, markdown, or additional text.
     """
+
 
     # Use the Gemini client to process the image with the correct multimodal format
     result = client.models.generate_content(
@@ -292,6 +305,28 @@ async def process_receipt_task(task_id: UUID, user_id: UUID, image_url: str):
         )
 
 # Original receipt functions
+
+def create_buyer_from_receipt(buyer_info: dict) -> Optional[str]:
+    """Create a buyer entry if buyer_info is present and return its ID."""
+    if not buyer_info or not buyer_info.get("name"):
+        return None
+
+    data = {
+        "name": buyer_info.get("name"),
+        "tax_id": buyer_info.get("taxId"),
+        "address": buyer_info.get("address"),
+        "zip_code": buyer_info.get("zipCode"),
+        "city": buyer_info.get("city"),
+        "state": buyer_info.get("state"),
+        "country": buyer_info.get("country"),
+        "phone": buyer_info.get("phone"),
+        "email": buyer_info.get("email"),
+    }
+    response = supabase.table("buyers").insert(data).execute()
+    if not response.data:
+        return None
+    return response.data[0]["id"]
+
 def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptResponse:
     """Create a new receipt for a user"""
     merchant_name = receipt_data.receipt_data.merchant_info.name if receipt_data.receipt_data.merchant_info else None
@@ -304,8 +339,12 @@ def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptRespons
             date_val = date.fromisoformat(date_str[:10])
         except Exception:
             date_val = None
-    # Convert date to ISO string for JSON serialization
     date_for_db = date_val.isoformat() if date_val else None
+
+    # ÚJ: buyer mentése
+    buyer_info = receipt_data.receipt_data.buyer_info.model_dump(by_alias=True) if receipt_data.receipt_data.buyer_info else None
+    buyer_id = create_buyer_from_receipt(buyer_info) if buyer_info and buyer_info.get("name") else None
+
     data = {
         "user_id": str(user_id),
         "receipt_data": receipt_data.receipt_data.model_dump(by_alias=True),
@@ -313,7 +352,8 @@ def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptRespons
         "total": total_amount,
         "currency": currency,
         "date": date_for_db,
-        "image_url": str(receipt_data.image_url) if receipt_data.image_url else None
+        "image_url": str(receipt_data.image_url) if receipt_data.image_url else None,
+        "buyer_id": str(buyer_id) if buyer_id else None,  # ÚJ
     }
     response = supabase.table("receipts").insert(data).execute()
     if not response.data:
