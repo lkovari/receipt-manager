@@ -85,6 +85,7 @@ class ReceiptData(BaseModel):
     is_valid: bool = Field(..., alias="isValid")
     merchant_info: MerchantInfo = Field(..., alias="merchantInfo")
     location: Location
+    buyer_info: Optional[BuyerInfo] = Field(None, alias="buyerInfo")
     date_time: Optional[str] = Field(None, alias="dateTime")
     items: List[ReceiptItem]
     financial_summary: FinancialSummary = Field(..., alias="financialSummary")
