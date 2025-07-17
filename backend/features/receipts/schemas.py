@@ -147,6 +147,7 @@ class ReceiptResponse(BaseModel):
     user_id: UUID
     receipt_data: ReceiptData
     merchant: Optional[str] = None
+    buyer: Optional[str] = None  # ÚJ
     total: float
     date: Optional[date]
     image_url: Optional[str] = None

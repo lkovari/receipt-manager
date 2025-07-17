@@ -61,11 +61,14 @@ For more information on using the Angular CLI, including detailed command refere
 ## Backend changes
 
 Every backend model change should run the following script to generate the models on frontend side
+
 - move to frontend/receipt-manager
 - npm run generate-api-service
 - dont forget to build (ng serve) or build for docker if it completed smoothly without errors you have a good chance, it will work on the deployed environment
 
 ## Docker related
+
 docker build -t receipt-manager .
 docker run -p 8080:80 receipt-manager
-tst: docker run -it receipt-manager sh   / # cd /usr/share/nginx/html
+tst: docker run -it receipt-manager sh / # cd /usr/share/nginx/
+do not forget to set the basePath = 'https://receipt-manager-ji1r.onrender.com'; in the BaseService api.base.service.ts

@@ -5,6 +5,7 @@
       <div class="details-main">
         <div class="details-grid">
           <div>Merchant: {{ receipt.merchant }}</div>
+          <div>Buyer: {{ buyerName ? buyerName : '-' }}</div>
           <div>Total: {{ receipt.total | number: '1.2-2' }} {{ currency }}</div>
           <div>Date: {{ receipt.date | date: 'medium' }}</div>
           <div>Created At: {{ receipt.created_at | date: 'medium' }}</div>

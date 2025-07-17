@@ -361,13 +361,19 @@ def create_receipt(user_id: UUID, receipt_data: ReceiptCreate) -> ReceiptRespons
     return ReceiptResponse(**response.data[0])
 
 def get_receipt(receipt_id: UUID, user_id: UUID) -> Optional[ReceiptResponse]:
-    """Get a specific receipt by ID for a user"""
+    """Get a specific receipt by ID for a user, including buyer name if available"""
     response = supabase.table("receipts").select("*").eq("id", str(receipt_id)).eq("user_id", str(user_id)).execute()
 
     if not response.data:
         return None
 
-    return ReceiptResponse(**response.data[0])
+    receipt = response.data[0]
+    buyer_name = None
+    if receipt.get("buyer_id"):
+        buyer_resp = supabase.table("buyers").select("name").eq("id", receipt["buyer_id"]).execute()
+        if buyer_resp.data:
+            buyer_name = buyer_resp.data[0].get("name")
+    return ReceiptResponse(**{**receipt, "buyer": buyer_name})
 
 def get_user_receipts(user_id: UUID, limit: int = 50, offset: int = 0) -> tuple[List[ReceiptListResponse], int]:
     """Get all receipts for a user with pagination"""

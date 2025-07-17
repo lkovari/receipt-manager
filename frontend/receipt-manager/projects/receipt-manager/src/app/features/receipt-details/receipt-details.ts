@@ -20,6 +20,7 @@ export class ReceiptDetailsComponent implements OnInit {
   receiptItems: ReceiptItem[] = [];
   showPreview = false;
   currency: string = '';
+  buyerName: string | null | undefined = null;
 
   constructor() {
     const nav = this.router.getCurrentNavigation();
@@ -29,6 +30,7 @@ export class ReceiptDetailsComponent implements OnInit {
   ngOnInit() {
     const resolved: ReceiptResponse | null = this.route.snapshot.data['receiptDetail'] ?? null;
     this.receiptResponse = resolved;
+    this.buyerName = this.receiptResponse?.receipt_data?.buyerInfo?.name;
     this.receiptItems = resolved?.receipt_data?.items ?? [];
     this.currency = resolved?.receipt_data?.items.length ? resolved?.receipt_data?.items[0].currency : '';
   }

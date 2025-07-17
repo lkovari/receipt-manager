@@ -1,3 +1,4 @@
+export * from './buyerInfo';
 export * from './discount';
 export * from './exchangeRate';
 export * from './financialSummary';

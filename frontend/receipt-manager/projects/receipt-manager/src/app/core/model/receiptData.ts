@@ -10,6 +10,7 @@
 import { PaymentInfo } from './paymentInfo';
 import { ReceiptItem } from './receiptItem';
 import { ExchangeRate } from './exchangeRate';
+import { BuyerInfo } from './buyerInfo';
 import { Discount } from './discount';
 import { MerchantInfo } from './merchantInfo';
 import { ServiceCharge } from './serviceCharge';
@@ -22,6 +23,7 @@ export interface ReceiptData {
     isValid: boolean;
     merchantInfo: MerchantInfo;
     location: Location;
+    buyerInfo?: BuyerInfo | null;
     dateTime?: string | null;
     items: Array<ReceiptItem>;
     financialSummary: FinancialSummary;
