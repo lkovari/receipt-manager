@@ -20,5 +20,8 @@ basePath = 'https://receipt-manager-ji1r.onrender.com';
 # Login
 un: suzukigs500f0407@gmail.com pw:AdminAdm1n65
 
-# Url
+# Swagger Url
 https://receipt-manager-ji1r.onrender.com/
+
+# Site
+https://receipt-manager-frontend.onrender.com/login
