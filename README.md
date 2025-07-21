@@ -1,6 +1,24 @@
-Receipt Manager demo application
+# Receipt Manager Demo Application
 
-docker build -t receipt-manager . 
-docker run -p 8080:80 receipt-manager 
-tst: docker run -it receipt-manager sh / # cd /usr/share/nginx/ 
-do not forget to set the basePath = 'https://receipt-manager-ji1r.onrender.com'; in the BaseService api.base.service.ts
+## Docker Commands
+
+# Build the Docker image
+docker build -t receipt-manager .
+
+# Run the container and map port 8080 to 80
+docker run -p 8080:80 receipt-manager
+
+# Test: Open a shell inside the container
+docker run -it receipt-manager sh
+# Inside container
+cd /usr/share/nginx/
+
+# WARNING:
+# Do not forget to set the following in BaseService (api.base.service.ts):
+basePath = 'https://receipt-manager-ji1r.onrender.com';
+
+# Login
+un: suzukigs500f0407@gmail.com pw:AdminAdm1n65
+
+# Url
+https://receipt-manager-ji1r.onrender.com/
